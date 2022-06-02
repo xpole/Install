@@ -6,54 +6,45 @@ import java.util.List;
 
 public class Main {
 
+    public static void createDir(String path, String dirname, StringBuilder logStr) {
+        File dir = new File(path + "/" + dirname);
+        if (dir.mkdir())
+            logStr.append("Каталог " + dir + " создан" + "\n");
+    }
+
+    public static void createFile(String path, String filename, StringBuilder logStr) {
+        File file = new File(path, filename);
+        try {
+            if (file.createNewFile())
+                logStr.append("В директории " + path + " создан файл " + file.getName() + "\n");
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         StringBuilder string = new StringBuilder();
         File dir = new File("D://Games");
-        if (dir.mkdir())
-            string.append("Каталог " + dir + " создан" + "\n");
+        String dirTest = "D://";
+        createDir(dirTest, "Games2", string);
 
         List<String> dirs = Arrays.asList("src", "res", "savegames", "temp");
-        for (String s : dirs
-        ) {
-            if ((new File(dir, s)).mkdir())
-                string.append("Каталог " + s + " создан" + "\n");
+        for (String s : dirs) {
+            createDir("D://Games2", s, string);
         }
-        File dirSrc = new File("D://Games/src/main");
-        File dirSrc2 = new File("D://Games/src/test");
-        File dirSrc3 = new File("D://Games/temp");
-        if (dirSrc.mkdir())
-            string.append("Каталог " + dirSrc.getAbsolutePath() + " создан" + "\n");
-        if (dirSrc2.mkdir())
-            string.append("Каталог " + dirSrc2.getAbsolutePath() + " создан" + "\n");
+        createDir("D://Games2/src", "main", string);
+        createDir("D://Games2/src", "test", string);
 
         List<String> dirsRes = Arrays.asList("drawables", "vectors", "icons");
         for (String d : dirsRes
         ) {
-            if ((new File("D://Games/res", d)).mkdir())
-                string.append("Каталог " + d + " создан" + "\n");
+            createDir("D://Games2/res", d, string);
         }
-        File myFile = new File(dirSrc, "Main.java");
-        File myFile2 = new File(dirSrc, "Utils.java");
-        File myFile3 = new File(dirSrc3, "temp.txt");
-        try {
-            if (myFile.createNewFile())
-                string.append("В директории " + dirSrc + " создан файл " + myFile.getName() + "\n");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        try {
-            if (myFile2.createNewFile())
-                string.append("В директории " + dirSrc + " создан файл " + myFile2.getName() + "\n");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        try {
-            if (myFile3.createNewFile())
-                string.append("В директории " + dirSrc3 + " создан файл " + myFile3.getName() + "\n");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        try (FileWriter writer = new FileWriter(myFile3)) {
+        createFile("D://Games2/src/main", "Main.java", string);
+        createFile("D://Games2/src/main", "Utils.java", string);
+        createFile("D://Games2/temp", "temp.txt", string);
+
+        try (FileWriter writer = new FileWriter(new File("D://Games2/temp", "temp.txt"))) {
             // запись в файл
             writer.write(String.valueOf(string));
             writer.flush();
